@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {View, StyleSheet, SafeAreaView, Text, TextInput} from "react-native";
 import Svg from "react-native-svg";
 
-import {usePaymentInputs, images} from "react-native-payment-inputs";
+import {usePaymentInputs} from "react-native-payment-inputs";
 
 export default function App() {
   const [cardNumber, setCardNumber] = useState("4444");

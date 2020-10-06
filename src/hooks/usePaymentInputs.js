@@ -45,12 +45,32 @@ export default function usePaymentInputs({images} = {images: defaultImages}) {
     cardNumber: false,
     expiry: false,
     cvc: false,
-  });
+  }); 
 
   const touch = useCallback(fieldName => setTouchedInputs(e => ({...e, [fieldName]: true})), [setTouchedInputs]);
   const touchCardNumber = useCallback(() => touch("cardNumber"), [touch]);
   const touchExpiry = useCallback(() => touch("expiry"), [touch]);
   const touchCvc = useCallback(() => touch("cvc"), [touch]);
+
+  const [focusedInputs, setFocusedInputs] = useState({
+    cardNumber: false,
+    expiry: false,
+    cvc: false,
+  });
+
+  const setFocused = useCallback(
+    (fieldName, isFocused) => setFocusedInputs(e => ({...e, [fieldName]: isFocused})),
+    [setFocusedInputs],
+  );
+
+  const focusCardNumber = useCallback(() => setFocused("cardNumber", true), [setFocused]);
+  const blurCardNumber = useCallback(() => setFocused("cardNumber", false), [setFocused]);
+
+  const focusExpiry = useCallback(() => setFocused("expiry", true), [setFocused]);
+  const blurExpiry = useCallback(() => setFocused("expiry", false), [setFocused]);
+
+  const focusCvc = useCallback(() => setFocused("cvc", true), [setFocused]);
+  const blurCvc = useCallback(() => setFocused("cvc", false), [setFocused]);
 
   const [cardType, setCardType] = useState();
 
@@ -70,6 +90,7 @@ export default function usePaymentInputs({images} = {images: defaultImages}) {
       return {
         placeholder: "Card Number",
         textContentType: "creditCardNumber",
+        selectTextOnFocus: true,
         ...extras,
         ref: cardNumberRef,
         onChangeText: (str) => {
@@ -78,11 +99,15 @@ export default function usePaymentInputs({images} = {images: defaultImages}) {
             expiryRef.current && expiryRef.current.focus();
           }
         },
-        onBlur: touchCardNumber,
+        onFocus: focusCardNumber,
+        onBlur: () => {
+          touchCardNumber();
+          blurCardNumber();
+        },
         value,
       };
     },
-    [cardNumberRef, cardNumberOnce, setCardNumberError, expiryRef, touchCardNumber],
+    [cardNumberRef, cardNumberOnce, setCardNumberError, expiryRef, touchCardNumber, focusCardNumber, blurCardNumber],
   );
   const getExpiryProps = useCallback(
     ({onChangeText, value, ...extras}) => {
@@ -97,19 +122,25 @@ export default function usePaymentInputs({images} = {images: defaultImages}) {
       expiryOnce(() => shouldSideEffect(value));
       return {
         placeholder: "Expiry MM/DD",
+        keyboardType: "numeric",
+        selectTextOnFocus: true,
         ...extras,
         ref: expiryRef,
-        onBlur: touchExpiry,
         onChangeText: (str) => {
           const {value, expiryError} = shouldSideEffect(str);
           if (!expiryError) {
             cvcRef.current && cvcRef.current.focus();
           }
         },
+        onFocus: focusExpiry,
+        onBlur: () => {
+          touchExpiry();
+          blurExpiry();
+        },
         value,
       };
     },
-    [expiryRef, expiryOnce, cvcRef, setExpiryError, touchExpiry],
+    [expiryRef, expiryOnce, cvcRef, setExpiryError, touchExpiry, focusExpiry, blurExpiry],
   );
   const getCvcProps = useCallback(
     ({onChangeText, value, ...extras}) => {
@@ -126,16 +157,22 @@ export default function usePaymentInputs({images} = {images: defaultImages}) {
       return {
         placeholder: "CVC",
         secureTextEntry: true,
+        keyboardType: "numeric",
+        selectTextOnFocus: true,
         ...extras,
         ref: cvcRef,
-        onBlur: touchCvc,
         onChangeText: (str) => {
           const {} = shouldSideEffect(str);
         },
+        onBlur: () => {
+          touchCvc();
+          blurCvc();
+        },
+        onFocus: focusCvc,
         value,
       };
     },
-    [cvcRef, cvcOnce, setCvcError, cardType, touchCvc],
+    [cvcRef, cvcOnce, setCvcError, cardType, touchCvc, focusCvc, blurCvc],
   );
   const getCardImageProps = useCallback(
     ({...extras}) => {
@@ -161,6 +198,9 @@ export default function usePaymentInputs({images} = {images: defaultImages}) {
           .filter(([k, v]) => !!v),
       ),
       touchedInputs,
+      focused: Object.entries(focusedInputs)
+        .filter(([k, v]) => v)
+        .map(([k]) => k),
     },
   };
 }
