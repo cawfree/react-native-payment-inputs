@@ -31,7 +31,7 @@
     "prettier": "^2.1.2"
   },
   "name": "react-native-payment-inputs",
-  "version": "0.1.0-alpha.0",
+  "version": "0.1.0-alpha.1",
   "description": "A React Hook to help with payment card input fields.",
   "main": "dist",
   "repository": "https://github.com/cawfree/react-native-payment-inputs",
