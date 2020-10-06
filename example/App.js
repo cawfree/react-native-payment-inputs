@@ -1,60 +1,47 @@
-import React, { useState } from "react";
-import { SafeAreaView, View, Text, TextInput } from "react-native";
+import React, {useState} from "react";
+import {View, StyleSheet, SafeAreaView, Text, TextInput} from "react-native";
 import Svg from "react-native-svg";
-import { PaymentInputsWrapper, usePaymentInputs, images } from "./lib";
-import styled, { css } from "styled-components";
 
-const Container = styled(View)`
-  width: 100%;
-`;
+import {usePaymentInputs, images} from "react-native-payment-inputs";
 
-function Component() {
+export default function App() {
   const [cardNumber, setCardNumber] = useState("4444");
-  const [expiry, setExpiry] = useState();
-  const [cvc, setCvc] = useState();
-  const [zip, setZip] = useState();
+  const [expiry, setExpiry] = useState("");
+  const [cvc, setCvc] = useState("");
   const {
     getCardNumberProps,
-    getExpiryDateProps,
-    getCVCProps,
-    getZIPProps,
     getCardImageProps,
-    wrapperProps,
+    getExpiryProps,
+    getCvcProps,
+    meta,
   } = usePaymentInputs();
   return (
-    <Container> 
-      <PaymentInputsWrapper {...wrapperProps}>
+    <View style={StyleSheet.absoluteFill}>
+      <SafeAreaView>
         <Svg
-          style={{
-            width: 50,
-            height: 35,
-          }}
-          viewBox="0 0 25 16"
-          {...getCardImageProps({ images })}
+          style={{width: 50, height: 30}}
+          {...getCardImageProps()}
         />
         <TextInput
           {...getCardNumberProps({
-            value: cardNumber,
             onChangeText: setCardNumber,
+            value: cardNumber,
           })}
         />
         <TextInput
-          {...getExpiryDateProps({
-            value: expiry,
+          {...getExpiryProps({
             onChangeText: setExpiry,
+            value: expiry,
           })}
         />
-        <TextInput {...getCVCProps({ value: cvc, onChangeText: setCvc })} />
-        <TextInput {...getZIPProps({ value: zip, onChangeText: setZip })} />
-      </PaymentInputsWrapper>
-    </Container>
-  );
-}
-
-export default function App() {
-  return (
-    <SafeAreaView>
-      <Component />
-    </SafeAreaView>
+        <TextInput
+          {...getCvcProps({
+            onChangeText: setCvc,
+            value: cvc,
+          })}
+        />
+        <Text children={JSON.stringify(meta)} />
+      </SafeAreaView>
+    </View>
   );
 }
