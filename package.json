@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "build": "yarn ; babel src --out-dir dist ; rm -rf node_modules"
+    "build": "yarn ; babel src --out-dir dist ; rm -rf node_modules",
+    "postinstall": "yarn build"
   },
   "keywords": [
     "react-native",
@@ -31,7 +32,7 @@
     "prettier": "^2.1.2"
   },
   "name": "react-native-payment-inputs",
-  "version": "0.1.0-alpha.2",
+  "version": "0.1.0-alpha.3-coinjar",
   "description": "A React Hook to help with payment card input fields.",
   "main": "dist",
   "repository": "https://github.com/cawfree/react-native-payment-inputs",
