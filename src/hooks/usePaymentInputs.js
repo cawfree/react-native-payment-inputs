@@ -75,7 +75,7 @@ export default function usePaymentInputs({images} = {images: defaultImages}) {
   const [cardType, setCardType] = useState();
 
   const getCardNumberProps = useCallback(
-    ({onChangeText, value, ...extras}) => {
+    ({onChangeText, value, placeholder, ...extras}) => {
       throwOnBadProps({onChangeText, value});
       const shouldSideEffect = (str) => {
         const value = formatCardNumber(str);
@@ -88,7 +88,7 @@ export default function usePaymentInputs({images} = {images: defaultImages}) {
       };
       cardNumberOnce(() => shouldSideEffect(value));
       return {
-        placeholder: "Card Number",
+        placeholder: !placeholder ? "Card Number" : placeholder,
         textContentType: "creditCardNumber",
         selectTextOnFocus: true,
         ...extras,
@@ -110,7 +110,7 @@ export default function usePaymentInputs({images} = {images: defaultImages}) {
     [cardNumberRef, cardNumberOnce, setCardNumberError, expiryRef, touchCardNumber, focusCardNumber, blurCardNumber],
   );
   const getExpiryProps = useCallback(
-    ({onChangeText, value, ...extras}) => {
+    ({onChangeText, value, placeholder, ...extras}) => {
       throwOnBadProps({onChangeText, value});
       const shouldSideEffect = (str) => {
         const value = formatExpiry(str) || "";
@@ -121,7 +121,7 @@ export default function usePaymentInputs({images} = {images: defaultImages}) {
       };
       expiryOnce(() => shouldSideEffect(value));
       return {
-        placeholder: "Expiry MM/DD",
+        placeholder: !placeholder ? "Expiry MM/DD" : placeholder,
         keyboardType: "numeric",
         selectTextOnFocus: true,
         ...extras,
@@ -143,7 +143,7 @@ export default function usePaymentInputs({images} = {images: defaultImages}) {
     [expiryRef, expiryOnce, cvcRef, setExpiryError, touchExpiry, focusExpiry, blurExpiry],
   );
   const getCvcProps = useCallback(
-    ({onChangeText, value, ...extras}) => {
+    ({onChangeText, value, placeholder, ...extras}) => {
       throwOnBadProps({onChangeText, value});
       const shouldSideEffect = (str) => {
         // TODO: Implement formatting.
@@ -155,7 +155,7 @@ export default function usePaymentInputs({images} = {images: defaultImages}) {
       };
       cvcOnce(() => shouldSideEffect(value));
       return {
-        placeholder: "CVC",
+        placeholder: !placeholder ? "CVC" : placeholder,
         secureTextEntry: true,
         keyboardType: "numeric",
         selectTextOnFocus: true,
